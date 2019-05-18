@@ -1,14 +1,8 @@
 package edu.handong.analysis;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
-import edu.handong.analysis.datamodel.Course;
-import edu.handong.analysis.datamodel.Student;
-import edu.handong.analysise.utils.NotEnoughArgumentException;
-import edu.handong.analysise.utils.Utils;
+import java.util.*;
+import edu.handong.analysis.datamodel.*;
+import edu.handong.analysis.utils.*;
 
 public class HGUCoursePatternAnalyzer {
 
