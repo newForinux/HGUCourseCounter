@@ -1,5 +1,7 @@
 package edu.handong.analysis.datamodel;
 
+import java.util.*;
+
 public class Student {
 	private String studentId;
 	private ArrayList<Course> coursesTaken;
