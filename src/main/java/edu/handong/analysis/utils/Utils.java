@@ -32,6 +32,7 @@ public class Utils {
 		
 		PrintWriter outputStream = null;
 		
+		while (outputStream == null) {
 		try
 		{
 			outputStream = new PrintWriter(new FileOutputStream(targetFileName));
@@ -41,6 +42,8 @@ public class Utils {
 			System.out.println ("There is no directory. we'll make directory");
 			File mkdir_path = new File(targetFileName);
 			mkdir_path.getParentFile().mkdirs();
+
+		}
 		}
 		
 		for (String line:lines) {
