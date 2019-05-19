@@ -79,7 +79,6 @@ public class HGUCoursePatternAnalyzer {
 	 * @return
 	 */
 	private ArrayList<String> countNumberOfCoursesTakenInEachSemester(Map<String, Student> sortedStudents) {
-		// 학생 아이디, 총 다닌 학기수, 학기, 학기당 들은 강의개수
 		// TODO: Implement this method
 		ArrayList<String> new_file = new ArrayList<String>();
 		HashMap<String, Integer> searchTotalSemester;
@@ -89,7 +88,10 @@ public class HGUCoursePatternAnalyzer {
 		Iterator<String> itr = sortedStudents.keySet().iterator();
 		int semesterCourseNum, maxSemester;
 		
-
+		String defaultmenu = "StudentID" + ", " + "TotalNumberOfSemestersRegistered" + ", " 
+							+ "Semester" + ", " + "NumCoursesTakenInTheSemester";
+		new_file.add(defaultmenu);
+		
 		while (itr.hasNext()) {
 			maxSemester = 1;
 			sortedStudentKey = (String) itr.next();
@@ -108,7 +110,6 @@ public class HGUCoursePatternAnalyzer {
 							index + ", " +
 							semesterCourseNum;
 				new_file.add(new_line);
-				System.out.println(new_line);
 			}
 		}
 		
