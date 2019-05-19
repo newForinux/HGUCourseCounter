@@ -9,8 +9,10 @@ public class Utils {
 		Scanner inputStream = null;
 		try {
 			inputStream = new Scanner(new File(file));
+
 		} catch (FileNotFoundException e) {
-			System.out.println("Error opening the file" + file);
+			System.out.println(new NotEnoughArgumentException("The file path does not exist. Please check your CLI argument!"));
+			System.exit(0);
 		}
 		ArrayList<String> result = new ArrayList<String>();
 		String line = new String();
