@@ -49,8 +49,20 @@ public class HGUCoursePatternAnalyzer {
 	private HashMap<String,Student> loadStudentCourseRecords(ArrayList<String> lines) {
 		
 		// TODO: Implement this method
+		HashMap<String,Student> resultHashMap = new HashMap<String,Student>();
+		Student newStudent = null;
 		
-		return null; // do not forget to return a proper variable.
+		for (int i = 0; i < lines.size(); i++) {
+			Course course = new Course(lines.get(i));
+			
+			if (i == 0 || !newStudent.getStudentId().equals(course.getStudentId())) 
+				newStudent = new Student(course.getStudentId());
+			
+			newStudent.addCourse(course);
+			resultHashMap.put(course.getStudentId(), newStudent);
+		}
+		
+		return resultHashMap; // do not forget to return a proper variable.
 	}
 
 	/**
@@ -60,16 +72,47 @@ public class HGUCoursePatternAnalyzer {
      * 0001,14,2,8
 	 * ....
 	 * 
-	 * 0001,14,1,9 => this means, 0001 student registered 14 semeters in total. In the first semeter (1), the student took 9 courses.
+	 * 0001,14,1,9 => this means, 0001 student registered 14 semesters in total. In the first semester (1), the student took 9 courses.
 	 * 
 	 * 
 	 * @param sortedStudents
 	 * @return
 	 */
 	private ArrayList<String> countNumberOfCoursesTakenInEachSemester(Map<String, Student> sortedStudents) {
-		
+		// 학생 아이디, 총 다닌 학기수, 학기, 학기당 들은 강의개수
 		// TODO: Implement this method
+		ArrayList<String> new_file = new ArrayList<String>();
+		HashMap<String, Integer> searchTotalSemester;
+		String new_line = null;
+		String sortedStudentKey = null;
+		Student newStudentByStudentId;
+		Iterator<String> itr = sortedStudents.keySet().iterator();
+		int semesterCourseNum, maxSemester;
 		
-		return null; // do not forget to return a proper variable.
+
+		while (itr.hasNext()) {
+			maxSemester = 1;
+			sortedStudentKey = (String) itr.next();
+			newStudentByStudentId = sortedStudents.get(sortedStudentKey);
+			searchTotalSemester = newStudentByStudentId.getSemestersByYearAndSemester();
+			
+			
+			while (searchTotalSemester.containsValue(maxSemester))
+				maxSemester++;
+			
+			
+			for (int index = 1; index < maxSemester; index++) {
+				semesterCourseNum = newStudentByStudentId.getNumCourseInNthSemester(index);
+				new_line = newStudentByStudentId.getStudentId() + ", " +
+							(maxSemester - 1) + ", " +
+							index + ", " +
+							semesterCourseNum;
+				new_file.add(new_line);
+				System.out.println(new_line);
+			}
+		}
+		
+		
+		return new_file; // do not forget to return a proper variable.
 	}
 }

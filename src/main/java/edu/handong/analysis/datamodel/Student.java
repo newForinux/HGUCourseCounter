@@ -8,7 +8,9 @@ public class Student {
 	private HashMap<String, Integer> semestersByYearAndSemester;
 	
 	public Student (String studentId) {
-		
+		this.studentId = studentId;
+		coursesTaken = new ArrayList<Course>();
+		semestersByYearAndSemester = new HashMap<String, Integer>();
 	}
 	
 	public void addCourse (Course newRecord) {
@@ -16,24 +18,37 @@ public class Student {
 	}
 	
 	public HashMap<String, Integer> getSemestersByYearAndSemester() {
-		int semester = 0, temp = 0;
+		int semester = 0, temp = 0, tempYear = 0;
 		String key = null;
-		HashMap<String, Integer> getter = new HashMap<String, Integer>();
+		semestersByYearAndSemester = new HashMap<String, Integer>(); 
 		
 		for (int i = 0; i < coursesTaken.size(); i++) {
-			if (i == 0 || temp == coursesTaken.get(i).semesterCourseTaken) {
+			
+			if (i == 0 || temp != coursesTaken.get(i).semesterCourseTaken) {
 				key = coursesTaken.get(i).yearTaken + "-" + coursesTaken.get(i).semesterCourseTaken;
 				semester++;
-				temp = semester;
-				getter.put(key, semester);
+				temp = coursesTaken.get(i).semesterCourseTaken;
+				tempYear = coursesTaken.get(i).yearTaken;
+				//System.out.println (coursesTaken.get(i).getStudentId() + " " + key + " " + semester);
+				
+				semestersByYearAndSemester.put(key, semester);
+			}
+			
+			else if (temp == coursesTaken.get(i).semesterCourseTaken && tempYear != coursesTaken.get(i).yearTaken) {
+				key = coursesTaken.get(i).yearTaken + "-" + coursesTaken.get(i).semesterCourseTaken;
+				semester++;
+				temp = coursesTaken.get(i).semesterCourseTaken;
+				tempYear = coursesTaken.get(i).yearTaken;
+				semestersByYearAndSemester.put(key, semester);
 			}
 		}
 		
-		return getter;
+		return semestersByYearAndSemester;
 	}
 	
 	public int getNumCourseInNthSemester (int semester) {
-		HashMap<String, Integer> getter = getSemestersByYearAndSemester();
+		semestersByYearAndSemester = getSemestersByYearAndSemester();
+		Map<String, Integer> getter = new TreeMap<>(semestersByYearAndSemester);
 		String key = null;
 		int countNum = 0;
 		
@@ -44,5 +59,13 @@ public class Student {
 		}
 		
 		return countNum;
+	}
+
+	public String getStudentId() {
+		return studentId;
+	}
+
+	public ArrayList<Course> getCoursesTaken() {
+		return coursesTaken;
 	}
 }

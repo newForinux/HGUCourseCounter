@@ -13,15 +13,15 @@ public class Course {
 	
 	public Course (String line) {
 		String[] array_str = line.split(",");
-		studentId = array_str[0];
-		yearMonthGraduated = array_str[1];
-		firstMajor = array_str[2];
-		secondMajor = array_str[3];
-		courseCode = array_str[4];
-		courseName = array_str[5];
-		courseCredit = array_str[6];
-		yearTaken = Integer.parseInt(array_str[7]);
-		semesterCourseTaken = Integer.parseInt(array_str[8]);
+		studentId = array_str[0].trim();
+		yearMonthGraduated = array_str[1].trim();
+		firstMajor = array_str[2].trim();
+		secondMajor = array_str[3].trim();
+		courseCode = array_str[4].trim();
+		courseName = array_str[5].trim();
+		courseCredit = array_str[6].trim();
+		yearTaken = Integer.parseInt(array_str[7].trim());
+		semesterCourseTaken = Integer.parseInt(array_str[8].trim());
 	}
 	
 	public String getStudentId() {
