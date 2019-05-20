@@ -7,13 +7,16 @@ public class Utils {
 
 	public static ArrayList<String> getLines (String file, boolean removeHeader) {
 		Scanner inputStream = null;
+		
+		
 		try {
 			inputStream = new Scanner(new File(file));
-
+			
 		} catch (FileNotFoundException e) {
-			System.out.println(new NotEnoughArgumentException("The file path does not exist. Please check your CLI argument!"));
+			new NotEnoughArgumentException("The file path does not exist. Please check your CLI argument!");
 			System.exit(0);
 		}
+
 		ArrayList<String> result = new ArrayList<String>();
 		String line = new String();
 		
@@ -41,7 +44,7 @@ public class Utils {
 			
 			}catch (FileNotFoundException e)
 			{
-				System.out.println ("There is no directory. we'll make all directories");
+				System.out.println ("There is no directory. we'll make all directories!");
 				File mkdir_path = new File(targetFileName);
 				mkdir_path.getParentFile().mkdirs();
 			}
