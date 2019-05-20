@@ -113,7 +113,6 @@ public class HGUCoursePatternAnalyzer {
 			}
 		}
 		
-		
 		return new_file; // do not forget to return a proper variable.
 	}
 }
