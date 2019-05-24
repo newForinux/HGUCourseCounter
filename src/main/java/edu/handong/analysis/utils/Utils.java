@@ -2,11 +2,34 @@ package edu.handong.analysis.utils;
 
 import java.io.*;
 import java.util.*;
+import org.apache.commons.cli.*;
+
 
 public class Utils {
 
 	public static ArrayList<String> getLines (String file, boolean removeHeader) {
 		Scanner inputStream = null;
+		String path;
+		String fullpath;
+		String file_path;
+		Options options = createOptions();
+		File pathfile;
+		
+		if (parseOptions(options, args)) {
+			if (help) {
+				printHelp(options);
+				return;
+			}
+			
+			pathfile = new File(path);
+			
+			// if directory is not existed.
+			if (!pathfile.isDirectory()) {
+				System.out.println ("This argument is file path. Please put directory path.");
+				return;
+			}
+			
+			System.out.println ("You provided \"" + path + "\" as the value of the option");
 		
 		try {
 			inputStream = new Scanner(new File(file));

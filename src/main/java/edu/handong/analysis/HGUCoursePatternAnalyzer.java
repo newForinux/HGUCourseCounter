@@ -1,5 +1,6 @@
 package edu.handong.analysis;
 
+import java.io.File;
 import java.util.*;
 import edu.handong.analysis.datamodel.*;
 import edu.handong.analysis.utils.*;
@@ -15,6 +16,7 @@ public class HGUCoursePatternAnalyzer {
 	 */
 	public void run(String[] args) {
 		
+		/*
 		try {
 			// when there are not enough arguments from CLI, it throws the NotEnoughArgmentException which must be defined by you.
 			if(args.length<2)
@@ -23,6 +25,8 @@ public class HGUCoursePatternAnalyzer {
 			System.out.println(e.getMessage());
 			System.exit(0);
 		}
+		*/
+
 		
 		String dataPath = args[0]; // csv file to be analyzed
 		String resultPath = args[1]; // the file path where the results are saved.
