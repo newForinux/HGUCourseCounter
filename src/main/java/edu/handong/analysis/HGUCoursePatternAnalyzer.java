@@ -17,7 +17,7 @@ import edu.handong.analysis.utils.*;
 public class HGUCoursePatternAnalyzer {
 
 	private HashMap<String,Student> students;
-	private HashMap<Course,Integer> courses;
+	
 	String insert;			// file path
 	String output;			// result file path
 	String analysis;		// 1. hw5 result, 2. coursecode new result
@@ -54,9 +54,8 @@ public class HGUCoursePatternAnalyzer {
 			}
 			
 			else if (analysis.equals("2")) {
-				courses = loadCourseYearRecords(lines);
 				
-				ArrayList<String> linesToBeSaved = countPerCourseNameYear(courses, coursecode, startyear, endyear);
+				ArrayList<String> linesToBeSaved = countPerCourseNameYear(lines, coursecode, startyear, endyear);
 				
 				Utils.writeAFile(linesToBeSaved, output);
 			}
@@ -103,7 +102,7 @@ public class HGUCoursePatternAnalyzer {
 			newCourse = lines.get(i);
 			resultHashMap.put(newCourse, newCourse.getYearTaken());
 		}
-
+		System.out.println (resultHashMap.size());
 		return resultHashMap;
 	}
 
@@ -196,61 +195,94 @@ public class HGUCoursePatternAnalyzer {
 	
 	
 	
-	private ArrayList<String> countPerCourseNameYear(HashMap<Course, Integer> sortedCourses, String courseCode, String startyear, String endyear) {
-
-		ArrayList<String> new_file = new ArrayList<String>();
-		ArrayList<String> codeFromStudent = new ArrayList<String>(); 
-		String new_line = null;
-		String rate = null;
-		String courseName = null;
+	private ArrayList<String> countPerCourseNameYear(ArrayList<Course> lines, String courseCode, String startyear, String endyear) {
+		ArrayList<String> newFile = new ArrayList<String>();
+		ArrayList<String> stuId = new ArrayList<String>();
+		HashMap<String, Integer> search = new HashMap<String, Integer>();
+		HashMap<String, Integer> search2 = new HashMap<String, Integer>();
+		String newLine;
 		
-		Iterator<Course> itr = sortedCourses.keySet().iterator();
+		int start = Integer.parseInt(startyear);
+		int end = Integer.parseInt(endyear);
+		int year, semester, value;
+		String coursecode, coursename = null, rate;
+		int[][] Total = new int [end-start+1][4];
+		int[][] Taken = new int [end-start+1][4];
 		
-		int start, end;
-		int foundValue;
+		String header = "Year" + "," + "Semester" + "," + "CourseCode"
+						+ "," + "CourseName" + "," + "TotalStudents" 
+						+ "," + "StudentsTaken" + "," + "Rate";
 		
-		start = Integer.parseInt(startyear);
-		end = Integer.parseInt(endyear);
+		newFile.add(header);
 		
-		
-		int[][] TotalStudents = new int[end-start+1][4];
-		int[][] StudentsTaken = new int[end-start+1][4];
-		
-		String defaultmenu = "Year" + "," + "Semester" + "," + "CourseCode"
-							+ "," + "CourseName" + "," + "TotalStudents" 
-							+ "," + "StudentsTaken" + "," + "Rate";
-		new_file.add(defaultmenu);
-		
-		while (itr.hasNext()) {
-			Course newCourse = (Course)itr.next();
-			foundValue = sortedCourses.get(newCourse);
+		for (int i = 0; i < lines.size(); i++) {
+			Course newCourse = new Course();
+			newCourse = lines.get(i);
+			year = newCourse.getYearTaken();
+			semester = newCourse.getSemesterCourseTaken();
+			coursecode = newCourse.getCourseCode();
 			
-			for (int i = start; i <= end; i++) {
-				if (foundValue == i && !codeFromStudent.contains(newCourse.getStudentId())) {
-					TotalStudents[i-start][newCourse.getSemesterCourseTaken()-1]++;
-					codeFromStudent.add(newCourse.getStudentId());
+			for (int j = start; j <= end; j++) {
+				if (year == j) {
+					if (!stuId.contains(newCourse.getStudentId())) {
+						Total[j-start][semester-1]++;
+						stuId.add(newCourse.getStudentId());
+						search.put(newCourse.getStudentId(), semester);
+						search2.put(newCourse.getStudentId(), year);
 					
-					if (newCourse.getCourseCode().equals(courseCode)) {
-						StudentsTaken[i-start][newCourse.getSemesterCourseTaken()-1]++;
-						courseName = newCourse.getCourseName();
+						if (coursecode.equals(courseCode)) {
+							coursename = newCourse.getCourseName();
+							Taken[j-start][semester-1]++;
+						}
+					}
+					
+					else {
+						if (semester != search.get(newCourse.getStudentId())) {
+							Total[j-start][semester-1]++;
+							stuId.add(newCourse.getStudentId());
+							search.put(newCourse.getStudentId(), semester);
+							
+						
+							if (coursecode.equals(courseCode)) {
+								coursename = newCourse.getCourseName();
+								Taken[j-start][semester-1]++;
+							}
+						}
+						
+						else if (j != search2.get(newCourse.getStudentId())) {
+							Total[j-start][semester-1]++;
+							stuId.add(newCourse.getStudentId());
+							search2.put(newCourse.getStudentId(), year);
+							
+						
+							if (coursecode.equals(courseCode)) {
+								coursename = newCourse.getCourseName();
+								Taken[j-start][semester-1]++;
+							}
+						}
 					}
 				}
+				
 			}
 		}
 		
 		for (int i = start; i <= end; i++) {
-			for (int semester = 0; semester < 4; semester++) {
-				rate = String.format("%,.1f%%", (double)StudentsTaken[i-start][semester]/TotalStudents[i-start][semester]*100);
-				new_line = i + "," + (semester+1) + "," + courseCode + ","
-							+ courseName + "," + TotalStudents[i-start][semester] + ","
-							+ StudentsTaken[i-start][semester] + "," + rate;
+			for (int j = 0; j < 4; j++) {
+				rate = String.format("%.1f%%", (double)Taken[i-start][j]/Total[i-start][j]*100);
+				newLine = i + "," +
+						(j+1) + "," +
+						courseCode + "," +
+						coursename + "," +
+						Total[i-start][j] + "," +
+						Taken[i-start][j] + "," +
+						rate;
 				
-				if (TotalStudents[i-start][semester] != 0)
-					new_file.add(new_line);
+				if (Total[i-start][j] != 0)
+					newFile.add(newLine);
 			}
 		}
 		
-		return new_file;
+		return newFile;
 	}
 	
 	private ArrayList<String> countNumberOfCoursesTakenInEachSemester(Map<String, Student> sortedStudents) {
