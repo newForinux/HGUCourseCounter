@@ -11,19 +11,42 @@ public class Course {
 	int yearTaken;
 	int semesterCourseTaken;
 	
-	public Course (String line) {
-		String[] array_str = line.split(",");
-		studentId = array_str[0].trim();
-		yearMonthGraduated = array_str[1].trim();
-		firstMajor = array_str[2].trim();
-		secondMajor = array_str[3].trim();
-		courseCode = array_str[4].trim();
-		courseName = array_str[5].trim();
-		courseCredit = array_str[6].trim();
-		yearTaken = Integer.parseInt(array_str[7].trim());
-		semesterCourseTaken = Integer.parseInt(array_str[8].trim());
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
 	}
-	
+
+	public void setYearMonthGraduated(String yearMonthGraduated) {
+		this.yearMonthGraduated = yearMonthGraduated;
+	}
+
+	public void setFirstMajor(String firstMajor) {
+		this.firstMajor = firstMajor;
+	}
+
+	public void setSecondMajor(String secondMajor) {
+		this.secondMajor = secondMajor;
+	}
+
+	public void setCourseCode(String courseCode) {
+		this.courseCode = courseCode;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	public void setCourseCredit(String courseCredit) {
+		this.courseCredit = courseCredit;
+	}
+
+	public void setYearTaken(int yearTaken) {
+		this.yearTaken = yearTaken;
+	}
+
+	public void setSemesterCourseTaken(int semesterCourseTaken) {
+		this.semesterCourseTaken = semesterCourseTaken;
+	}
+
 	public String getStudentId() {
 		return studentId;
 	}

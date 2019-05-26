@@ -1,57 +1,49 @@
 package edu.handong.analysis.utils;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
-import org.apache.commons.cli.*;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
+import edu.handong.analysis.datamodel.Course;
 
 public class Utils {
 
-	public static ArrayList<String> getLines (String file, boolean removeHeader) {
-		Scanner inputStream = null;
-		String path;
-		String fullpath;
-		String file_path;
-		Options options = createOptions();
-		File pathfile;
-		
-		if (parseOptions(options, args)) {
-			if (help) {
-				printHelp(options);
-				return;
-			}
-			
-			pathfile = new File(path);
-			
-			// if directory is not existed.
-			if (!pathfile.isDirectory()) {
-				System.out.println ("This argument is file path. Please put directory path.");
-				return;
-			}
-			
-			System.out.println ("You provided \"" + path + "\" as the value of the option");
+	public static ArrayList<Course> getLines (String file, boolean removeHeader) {
+		ArrayList<Course> result = new ArrayList<Course>();
 		
 		try {
-			inputStream = new Scanner(new File(file));
 			
-		} catch (FileNotFoundException e) {
+			Reader reader = new FileReader (file);
+			Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(reader);
+			
+			for (CSVRecord record : records) {
+				if (record.getRecordNumber() == 1)
+					continue;
+				
+				Course course = new Course();
+				
+				course.setStudentId(record.get(0).trim());
+				course.setYearMonthGraduated(record.get(1).trim());
+				course.setFirstMajor(record.get(2).trim());
+				course.setSecondMajor(record.get(3).trim());
+				course.setCourseCode(record.get(4).trim());
+				course.setCourseName(record.get(5).trim());
+				course.setCourseCredit(record.get(6).trim());
+				course.setYearTaken(Integer.parseInt(record.get(7).trim()));
+				course.setSemesterCourseTaken(Integer.parseInt(record.get(8).trim()));
+				
+				result.add(course);
+			}
+			
+		} catch (IOException e) {
 			new NotEnoughArgumentException("The file path does not exist. Please check your CLI argument!");
 			System.exit(0);
 		}
-
-		ArrayList<String> result = new ArrayList<String>();
-		String line = new String();
 		
-		while (inputStream.hasNextLine())
-		{
-			line = inputStream.nextLine();
-			result.add(line);
-		}
-		
-		if (removeHeader)
-			result.remove(0);
-		
-		inputStream.close();
 		return result;
 	}
 	
