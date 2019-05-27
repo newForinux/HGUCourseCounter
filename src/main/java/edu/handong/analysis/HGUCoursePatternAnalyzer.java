@@ -36,8 +36,7 @@ public class HGUCoursePatternAnalyzer {
 				printHelp(options);
 				return;
 			}
-			
-			System.out.println (insert);
+
 			ArrayList<Course> lines = Utils.getLines(insert, true);
 			
 			// To sort HashMap entries by key values so that we can save the results by student ids in ascending order.
@@ -55,9 +54,6 @@ public class HGUCoursePatternAnalyzer {
 				ArrayList<String> linesToBeSaved = countPerCourseNameYear(students, coursecode, startyear, endyear);
 				Utils.writeAFile(linesToBeSaved, output);
 			}
-			
-			
-			System.out.println("-------program terminated.");
 		}
 	}
 	
@@ -72,7 +68,6 @@ public class HGUCoursePatternAnalyzer {
 		// TODO: Implement this method
 		HashMap<String,Student> resultHashMap = new HashMap<String,Student>();
 		Student newStudent = null;
-		int count = 0;
 		int start, end;
 		
 		start = Integer.parseInt(startyear);
@@ -84,7 +79,6 @@ public class HGUCoursePatternAnalyzer {
 			
 			if (i == 0 || !newStudent.getStudentId().equals(course.getStudentId())) {
 				newStudent = new Student(course.getStudentId());
-				count++;
 			}
 			
 			for (int j = start; j <= end; j++) {
@@ -96,18 +90,6 @@ public class HGUCoursePatternAnalyzer {
 		}
 		
 		return resultHashMap; // do not forget to return a proper variable.
-	}
-	
-	private HashMap<Course, Integer> loadCourseYearRecords(ArrayList<Course> lines) {
-		HashMap<Course, Integer> resultHashMap = new HashMap<Course, Integer>();
-		
-		for (int i = 0; i < lines.size(); i++) {
-			Course newCourse = new Course();
-			newCourse = lines.get(i);
-			resultHashMap.put(newCourse, newCourse.getYearTaken());
-		}
-		System.out.println (resultHashMap.size());
-		return resultHashMap;
 	}
 
 	private boolean parseOptions(Options options, String[] args) {
@@ -197,12 +179,11 @@ public class HGUCoursePatternAnalyzer {
 	private void printHelp(Options options) {
 		HelpFormatter formatter = new HelpFormatter();
 		String header = "HGU Course Analyzer";
-		String footer ="";
+		String footer = "";
 		formatter.printHelp("HGUCourseCounter", header, options, footer, true);
 	}
 	
 	
-	//incompleted method
 	private ArrayList<String> countPerCourseNameYear(Map<String, Student> sortedStudents, String courseCode, String startyear, String endyear) {
 		
 		ArrayList<String> newFile = new ArrayList<String>();
@@ -254,7 +235,6 @@ public class HGUCoursePatternAnalyzer {
 								taken[j-start][z]++;
 							}
 						}
-						
 					}
 				}
 			}
@@ -268,8 +248,8 @@ public class HGUCoursePatternAnalyzer {
 				newLine = i + "," + (j+1) + "," + courseCode + "," + courseName + "," +
 							total[i-start][j] + "," + taken[i-start][j] + "," + rate;
 				
-				if (total[i-start][j] != 0)
-					newFile.add(newLine);
+				//if (total[i-start][j] != 0)
+				newFile.add(newLine);
 			}
 		}
 	
@@ -313,6 +293,6 @@ public class HGUCoursePatternAnalyzer {
 			}
 		}
 		
-		return new_file; // do not forget to return a proper variable.
+		return new_file;
 	}
 }
