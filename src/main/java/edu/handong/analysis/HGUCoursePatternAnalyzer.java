@@ -120,6 +120,12 @@ public class HGUCoursePatternAnalyzer {
 			output = cmd.getOptionValue("o");
 			analysis = cmd.getOptionValue("a");
 			coursecode = cmd.getOptionValue("c");
+			if (analysis.equals("2")) {
+				if (coursecode == null) {
+					printHelp(options);
+					return false;
+				}
+			}
 			startyear = cmd.getOptionValue("s");
 			endyear = cmd.getOptionValue("e");
 			help = cmd.hasOption("h");
@@ -164,7 +170,6 @@ public class HGUCoursePatternAnalyzer {
 		options.addOption(Option.builder("c").longOpt("coursecode")
 						.desc("Course code for '-a 2' option")
 						.hasArg()
-						.required()
 						.build());
 		
 		//add startyear options
@@ -205,14 +210,14 @@ public class HGUCoursePatternAnalyzer {
 		ArrayList<String> stuId = new ArrayList<String>();
 		
 		String sortedStudentKey = null;
-		String newLine, rate, studentId, temp = "";
+		String newLine, rate;
 		String courseName = null, code;
 		Student newStudentByStudentId;
 		Iterator<String> itr = sortedStudents.keySet().iterator();
 		
 		int start = Integer.parseInt(startyear);
 		int end = Integer.parseInt(endyear);
-		int year, semester;
+
 		
 		int[][] total = new int[end-start+1][4];
 		int[][] taken = new int[end-start+1][4];
@@ -223,16 +228,15 @@ public class HGUCoursePatternAnalyzer {
 		
 		newFile.add(header);
 		
-		while (itr.hasNext()) {
+		while (itr.hasNext()) {	
 			sortedStudentKey = (String) itr.next();
 			newStudentByStudentId = sortedStudents.get(sortedStudentKey);
 			courseOfStudent = newStudentByStudentId.getCoursesTaken();
 		
-			for (int i = 0; i < courseOfStudent.size(); i++) {
+			for (int i = 0; i < courseOfStudent.size(); i++) {	
 				
-				Course newC = courseOfStudent.get(i);
-				code = newC.getCourseCode();
-				coursecode = newC.getCourseCode();
+				Course newC = courseOfStudent.get(i);		
+				code = newC.getCourseCode();				
 				String course1 = newC.getYearTaken() + "-" + newC.getSemesterCourseTaken();
 				
 				for (int j = start; j <= end; j++) {
@@ -240,21 +244,22 @@ public class HGUCoursePatternAnalyzer {
 						String course2 = j + "-" + (z + 1);
 						
 						if (course1.equals(course2)) {
-							if (!stuId.contains(coursecode)) {
+							if (!stuId.contains(course2)) {
 								total[j-start][z]++;
-								stuId.add(coursecode);
+								stuId.add(course2);
 							}
 							
 							if (code.equals(courseCode)) {
 								courseName = newC.getCourseName();
 								taken[j-start][z]++;
 							}
-							
 						}
 						
 					}
 				}
 			}
+			
+			stuId.clear();
 		}
 		
 		for (int i = start; i <= end; i++) {
@@ -270,15 +275,7 @@ public class HGUCoursePatternAnalyzer {
 	
 		return newFile;
 	}
-	
-	private int checkYear(Course course, int start, int end) {
-		for (int i = start; i <= end; i++) {
-			
-			if (course.getYearTaken() == i)
-				return i;
-		}
-		return -1;
-	}
+
 	
 	private ArrayList<String> countNumberOfCoursesTakenInEachSemester(Map<String, Student> sortedStudents) {
 		// TODO: Implement this method
